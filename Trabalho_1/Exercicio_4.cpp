@@ -1,0 +1,181 @@
+#include <iostream>
+
+using namespace std;
+
+class Node{
+	public:
+		int info;
+		Node *next;
+		
+		Node(int el = 0, Node *pr = 0) {
+			info = el;
+			next = pr;
+		}
+};
+
+class Stack{
+	private:
+		Node *head;
+	public:
+		
+		Stack() {
+			head = 0;
+		}
+		void clear() {
+			Node *tmp = head;
+			
+			while(tmp != 0) {
+				tmp = tmp->next;
+				delete head;
+				head = tmp;
+			}
+		}
+		
+		bool isEmpty() {
+			return (head == 0);
+		}
+		
+		void push(int el) {
+			head = new Node(el, head);
+		}
+		
+		void pop() {
+			if(head == 0) {
+				cout << "\nPilha vazia!!" << endl;
+			}
+			else if(head->next == 0){
+				head = 0;
+			}
+			else{
+				Node *tmp = head->next;
+				delete head;
+				head= tmp;
+			}
+		}
+		
+		int popEl() {
+			if(head == 0) {
+				cout << "\nPilha vazia" << endl;
+				return -1;
+			}
+			else{
+				return head->info;
+			}
+		}
+		
+		void printStack() {
+			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
+				cout << "\nInformacao armazenada: " << tmp->info << endl;
+				cout << "Endereco atual: " << tmp << endl;
+				cout << "Proximo endereco: " << tmp->next << endl;
+			}
+		}
+};
+
+class Queue{
+	private:
+		Node *head, *tail;
+	public:
+		Queue() {
+			head = tail = 0;
+		}
+		
+		void clearQ(){
+			Node *tmp = head;
+			
+			while(tmp != 0){
+				tmp = tmp->next;
+				delete head;
+				head = tmp;
+			}
+		}
+		
+		bool isEmpty() {
+			return (head == 0);
+		}
+		
+		void enqueue(int el){
+			if(head == 0){
+				head = tail = new Node(el, 0);
+			}
+			else{
+				tail->next = new Node(el, 0);
+				tail = tail->next;
+			}
+			
+		}
+		
+		void dequeue() {
+			if (!isEmpty()) {
+				cout << "\nElemento removido: " << firstEl();
+				Node *tmp = head;
+				
+				if(head == tail) {
+					head = tail = 0;
+				}
+				else{
+					head = head->next;
+				}
+				
+				delete tmp;
+			}
+			else{
+				cout << "\nLista vazia, nenhum elemento retirado!";
+			}
+		}
+		
+		int firstEl() {
+			if(head == 0) {
+				cout << "\nFila vazia" << endl;
+				return -1;
+			}
+			else{
+				return head->info;
+			}
+		}
+		
+		void printQueue() {
+			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
+				cout << "\nInformacao armazenada: " << tmp->info << endl;
+				cout << "Endereco atual: " << tmp << endl;
+				cout << "Proximo endereco: " << tmp->next << endl;
+			}
+		}
+		
+		void reverseQueue() {
+			Stack s1;
+			
+			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
+				s1.push(tmp->info);
+			}
+			
+			clearQ();
+			
+			while(!s1.isEmpty()) {
+				enqueue(s1.popEl());
+				s1.pop();
+			}
+			
+		}		
+};
+
+int main() {
+	
+	Queue q1;
+	
+	q1.enqueue(5);
+	q1.enqueue(2);
+	q1.enqueue(67);
+	
+	cout << "Fila Original" << endl;
+	q1.printQueue();
+	
+	q1.reverseQueue();
+	
+	cout << "\nFila invertida" << endl;
+	q1.printQueue();
+	
+	return 0;
+}
+
+

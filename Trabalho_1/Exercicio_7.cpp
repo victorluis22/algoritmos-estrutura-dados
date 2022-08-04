@@ -1,0 +1,132 @@
+#include <iostream>
+
+using namespace std;
+
+class Node{
+	public:
+		int info;
+		Node *next, *prev;
+		
+		Node(int el = 0, Node *n = 0, Node *pr = 0) {
+			info = el;
+			next = n;
+			prev = pr;
+		}
+};
+
+class DLLNodeList{
+	private:
+		Node *head, *tail;
+	public:
+		DLLNodeList() {
+			head = tail = 0;
+		}
+		
+		void addToHead(int el) {
+			if(head == 0) {
+				head = tail = new Node(el);
+			}
+			else{
+				Node *tmp = new Node(el, head);
+				head->prev = tmp; 
+				head = tmp;
+			}
+		}
+		
+		void addToTail(int el) {
+			if(head == 0) {
+				head = tail = new Node(el);
+			}
+			else{
+				Node *tmp = new Node(el, 0, tail);
+				tail->next = tmp; 
+				tail = tmp;
+			}
+		}
+		
+		void deleteFromHead() {
+			if(head == 0) {
+				cout << "\nA lista ja esta vazia!" << endl;
+			}
+			else if(head == tail) {
+				delete head;
+				head = tail = 0;
+			}
+			else{
+				Node *tmp = head;
+				head = head->next;
+				head->prev = 0;
+				delete tmp;
+			}
+		}
+		
+		void deleteFromTail() {
+			if(head == 0) {
+				cout << "\nA lista ja esta vazia!" << endl;
+			}
+			else if(head == tail) {
+				delete head;
+				head = tail = 0;
+			}
+			else{
+				Node *tmp = tail;
+				tail = tail->prev;
+				tail->next = 0;
+				delete tmp;
+			}
+		}
+		
+		bool isInList(int el) {
+			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
+				if(tmp->info == el) {
+					return 1;
+				}
+			}
+			
+			return 0;
+		}
+		
+		
+		void printList() {
+			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
+				cout << "\nInformacao: " << tmp->info << endl;
+				cout << "Endereco: " << tmp << endl;
+				cout << "Endereco anterior: " << tmp->prev << endl;
+				cout << "Proximo endereco: " << tmp->next << endl;
+			}
+		}
+		
+		int get(int index) {
+			Node *tmp;
+			for(tmp = head; tmp != 0 && index > 0; tmp = tmp->next, index--);
+			
+			if(tmp && index >= 0){
+				return tmp->info;
+			}
+			else{
+				cout << "\nPosicao inexistente" << endl;
+				return -1;
+			}
+		}
+};
+
+int main() {
+	
+	DLLNodeList dl1;
+	int elemento;
+	
+	dl1.addToHead(5);
+	dl1.addToHead(6);
+	dl1.addToHead(12);
+	dl1.addToTail(234);
+	dl1.addToTail(11);
+	
+
+	dl1.printList();
+	
+	elemento = dl1.get(1);
+	
+	cout << "\nElemento obtido da posicao de indice 1 eh: " << elemento << endl;
+	
+	return 0;
+}
