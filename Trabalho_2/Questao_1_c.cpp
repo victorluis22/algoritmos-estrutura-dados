@@ -1,7 +1,6 @@
 #include <iostream>
 #include <queue>
 #include <stack>
-#include <math.h>
 
 #define BINARY_SEARCH_TREE
 
@@ -42,7 +41,6 @@ class BSTNode{
 	public:
 		T el;
 		BSTNode<T> *left, *right;
-		int balanceFactor = 0;
 
 		BSTNode() {
 			left = right = 0;
@@ -90,7 +88,7 @@ class BST{
 			return search(root, el);
 		}
 
-		void breadthFirstUDLR() {
+		void breadthFirst() {
 			Queue<BSTNode<T>*> queue;
 			BSTNode<T> *p = root;
 
@@ -110,90 +108,6 @@ class BST{
 						queue.enqueue(p->right);
 					}
 				}
-			}
-		}
-
-		void breadthFirstUDRL() {
-			Queue<BSTNode<T>*> queue;
-			BSTNode<T> *p = root;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					visit(p);
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-
-
-				}
-			}
-		}
-
-		void breadthFirstDULR() {
-			Stack<BSTNode<T>*> stack;
-			BSTNode<T> *p = root;
-			Queue<BSTNode<T>*> queue;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					stack.push(p);
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-				}
-			}
-
-			while(!stack.empty()){
-				visit(stack.top());
-				stack.pop();
-			}
-		}
-
-
-		void breadthFirstDURL() {
-			Stack<BSTNode<T>*> stack;
-			BSTNode<T> *p = root;
-			Queue<BSTNode<T>*> queue;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					stack.push(p);
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-				}
-			}
-
-			while(!stack.empty()){
-				visit(stack.top());
-				stack.pop();
 			}
 		}
 
@@ -262,41 +176,7 @@ class BST{
 				cout << "Arvore vazia" << endl;
 			}
 		}
-		
-		BSTNode<T>* rotateRight(BSTNode<T> *grandParent, BSTNode<T> *parent, BSTNode<T> *child){
-			if(parent != root){
-				grandParent->right = child;
-				parent->left = child->right;
-				child->right = parent;
-			}
-			else{
-				parent->left = child->right;
-				child->right = parent;
-				root = child;
-			}
-			
-			return child;
-		}
-		
-		BSTNode<T>* rotateLeft(BSTNode<T> *grandParent, BSTNode<T> *parent, BSTNode<T> *child){
-			if(parent != root){
-				grandParent->right = child;
-				parent->right = child->left;
-				child->left = parent;
-			}
-			else{
-				parent->right = child->left;
-				child->left = parent;
-				root = child;
-			}
-			
-			return child;
-		}
-		
-		void createBackbone(){
-			return createBackbone(root);
-		}
-		
+				
 		int distanceToRoot(const T &el){
 			return distanceToRoot(root, el);
 		}
@@ -305,30 +185,16 @@ class BST{
 			return showNodeHeight(root);
 		}
 		
-		void showBalanceFactors(){
-			return showBalanceFactors(root);
+		void childCounter(int *leftChild, int *rightChild){
+			return childCounter(root, leftChild, rightChild);
 		}
 		
-		void createPerfectTree(){
-			return createPerfectTree(root);
-		}
-		
-		int treeLength(){
-			return treeLength(root);
-		}
-		
-		void DWS(){
-			createBackbone();
-			createPerfectTree();
-		}
-		
-		BSTNode<T> * searchParentNode(const T &el){
-			return searchParentNode(root, el);
+		void deleteLeafs(){
+			return deleteLeafs(root);
 		}
 		
 		
 	protected:
-		
 		BSTNode<T> *root;
 		
 		void clear(BSTNode<T> *p){
@@ -344,26 +210,6 @@ class BST{
 					p = p->left;
 				}
 				else{
-					p = p->right;
-				}
-			}
-
-			return 0;
-		}
-		
-		BSTNode<T>* searchParentNode(BSTNode<T> *p, const T &el) {
-			BSTNode<T> *parent = p;
-			
-			while(p != 0){
-				if(el == p->el) {
-					return parent;
-				}
-				else if(el < p->el) {
-					parent = p;
-					p = p->left;
-				}
-				else{
-					parent = p;
 					p = p->right;
 				}
 			}
@@ -446,19 +292,6 @@ class BST{
 			delete tmp;
 		}
 		
-		void createBackbone(BSTNode<T> *tmp){
-			BSTNode<T> *prev = tmp;
-			while(tmp != 0){
-				if(tmp->left != 0){
-					tmp = rotateRight(prev, tmp, tmp->left);
-				}
-				else{
-					prev = tmp;
-					tmp = tmp->right;
-				}
-			}
-		}
-		
 		int distanceToRoot(BSTNode<T> *p, const T &el){
 			int distance = 1;
 			
@@ -506,12 +339,12 @@ class BST{
 				cout << "Altura = " << distanceToRoot(aux.front()->el);
 				aux.dequeue();
 			}
-			
 		}
 		
-		void showBalanceFactors(BSTNode<T> *p){
+		void childCounter(BSTNode<T> *p, int *leftChild, int *rightChild){
 			Queue<BSTNode<T>*> queue;
-			Queue<BSTNode<T>*> aux;
+			*leftChild = 0;
+			*rightChild = 0;
 			
 			if(p != 0){
 				queue.enqueue(p);
@@ -519,7 +352,33 @@ class BST{
 				while(!queue.empty()){
 					p = queue.dequeue();
 
-					aux.enqueue(p);
+					if(p->left != 0) {
+						queue.enqueue(p->left);
+						*leftChild += 1;
+					}
+
+					if(p->right != 0){
+						queue.enqueue(p->right);
+						*rightChild += 1;
+					}
+				}
+			}
+		}
+		
+		void deleteLeafs(BSTNode<T> *p){
+			Queue<BSTNode<T>*> queue;
+			Queue<BSTNode<T>*> aux;
+			BSTNode<T> *folha;
+			
+			if(p != 0){
+				queue.enqueue(p);
+
+				while(!queue.empty()){
+					p = queue.dequeue();
+					
+					if(p->left == 0 && p->right == 0){
+						aux.enqueue(p);
+					}
 
 					if(p->left != 0) {
 						queue.enqueue(p->left);
@@ -530,49 +389,16 @@ class BST{
 					}
 				}
 			}
-
-			while(!aux.empty()){
-				cout << "\nNo = "; visit(aux.front()); 
-				cout << "Fator = " << aux.front()->balanceFactor;
-				aux.dequeue();
+			
+			cout << "\n\nFolhas: ";
+			while(!aux.empty())
+			{
+				folha = aux.dequeue();
+				visit(folha);
+				findAndDeleteByMerging(folha->el);
 			}
 			
-		}
-		
-		int treeLength(BSTNode<T> *p){
-			static int counter = 1;
-			
-            if(p != 0){
-                treeLength(p->left);
-                treeLength(p->right);
-                counter++;
-            }
-            
-            return counter;
-		}
-		
-		void createPerfectTree(BSTNode<T> *p){
-			int n = treeLength();
-			int m = pow(2, floor(log2(n+1))) - 1;
-			BSTNode<T> *prev = p;
-						
-			for(int i = 0; i < (n - m); i++){
-				p = rotateLeft(prev, p, p->right);
-				prev = p;
-				p = p->right;
-				
-			}
-			
-			while(m > 1){
-				p = root;
-				m /= 2;
-				
-				for(int i = 0; i < m; i++){
-					p = rotateLeft(prev, p, p->right);
-					prev = p;
-					p = p->right;
-				}
-			}
+			cout << "\nDeletando folhas..." << endl;
 		}
 		
 		virtual void visit(BSTNode<T> *p) {
@@ -584,15 +410,24 @@ int main() {
 
 	BST<int> arvore1;
 
+	
 	arvore1.insert(10);
+	arvore1.insert(20);
+	arvore1.insert(30);
 	arvore1.insert(9);
 	arvore1.insert(8);
-	arvore1.insert(190);
+	arvore1.insert(12);
+	arvore1.insert(19);
+	arvore1.insert(13);
 	
+	cout << "Arvore antes: " << endl;
 	arvore1.showNodeHeight();
 	
-	cout << endl << endl;
-	arvore1.showBalanceFactors();
+	arvore1.deleteLeafs();
+	
+	cout << "\nArvore depois: " << endl;
+	arvore1.showNodeHeight();
+
 	
 	return 0;
 }

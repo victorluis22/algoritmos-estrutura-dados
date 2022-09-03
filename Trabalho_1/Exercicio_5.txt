@@ -153,11 +153,11 @@ class SequentialList{
 			}
 		}
 		
-		int findIndex(int el = 0) {
+		int findIndex() {
 			int index = 0, haveFindedEl = 0;
+			int el;
 			
-			cout << "\nEntre com o numero que deseja procurar: "; 
-			cin >> el;
+			cout << "\nEntre com o numero que deseja procurar: "; cin >> el;
 			
 			for(Node *tmp = head; tmp != 0; tmp = tmp->next) {
 				if(tmp->info == el) {
@@ -179,53 +179,38 @@ class SequentialList{
 			return index;
 		}
 		
-		void transferirMaior() {
-			Node *maior = head, *tmp;
-			int indexMaior;
-			
-			if(head == 0) {
-				cout << "\nLista Vazia\n" << endl;
-			}
-			else if(head == tail) {
-				cout << "\nLista tem apenas um elemento\n" << endl;
-			}
-			else{
-				for(tmp = head; tmp != 0; tmp = tmp->next){
-					if (tmp->info > maior->info) {
-						maior = tmp;
-					}
-				}
-				
-				if (maior == head) {
-					cout << "\nMaior valor ja esta no inicio da lista\n" << endl;
-				}
-				else{
-					for(tmp = head; tmp->next != maior && tmp != 0; tmp = tmp->next);
-					
-					tmp->next = maior->next;
-					maior->next = head;
-					head = maior;
-				}
-			}
-		}
-		
 };
 
 int main() {
 	
+	int el, i;
 	SequentialList sl1;
 	
-
-	sl1.addToTail(8);
-	sl1.addToTail(2);
-	sl1.addToTail(4);
-	sl1.addToTail(5);
-	sl1.addToTail(5);
-	sl1.addToTail(7);
-	sl1.addToTail(10);
-
-	sl1.transferirMaior();
 	
+	cout << "Insercao de 10 numeros:\n";
+	for(int i = 0; i < 10; i++) {
+		cout << "Insira um numero inteiro: "; cin >> el;
+		sl1.addToTail(el);
+	}
+	
+	cout << "\n\nPrint de Elementos Primos:\n";
+	sl1.printPrimeNodes();
+	
+	system("pause");
+	
+	cout << "\n\nInsercao de elemento no meio:\n";
+	sl1.insertMiddle();
+	sl1.printNodes();
+	
+	system("pause");
+	
+	cout << "\n\nProcura por indices:\n";
+	sl1.findIndex();
+	
+	system("pause");
+	
+	cout << "\n\nInsercao de 14 no final da lista:\n";
+	sl1.add14toTail();
 	sl1.printNodes();
 	
 	return 0;

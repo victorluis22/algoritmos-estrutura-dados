@@ -42,7 +42,6 @@ class BSTNode{
 	public:
 		T el;
 		BSTNode<T> *left, *right;
-		int balanceFactor = 0;
 
 		BSTNode() {
 			left = right = 0;
@@ -90,7 +89,7 @@ class BST{
 			return search(root, el);
 		}
 
-		void breadthFirstUDLR() {
+		void breadthFirst() {
 			Queue<BSTNode<T>*> queue;
 			BSTNode<T> *p = root;
 
@@ -110,90 +109,6 @@ class BST{
 						queue.enqueue(p->right);
 					}
 				}
-			}
-		}
-
-		void breadthFirstUDRL() {
-			Queue<BSTNode<T>*> queue;
-			BSTNode<T> *p = root;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					visit(p);
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-
-
-				}
-			}
-		}
-
-		void breadthFirstDULR() {
-			Stack<BSTNode<T>*> stack;
-			BSTNode<T> *p = root;
-			Queue<BSTNode<T>*> queue;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					stack.push(p);
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-				}
-			}
-
-			while(!stack.empty()){
-				visit(stack.top());
-				stack.pop();
-			}
-		}
-
-
-		void breadthFirstDURL() {
-			Stack<BSTNode<T>*> stack;
-			BSTNode<T> *p = root;
-			Queue<BSTNode<T>*> queue;
-
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					stack.push(p);
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-				}
-			}
-
-			while(!stack.empty()){
-				visit(stack.top());
-				stack.pop();
 			}
 		}
 
@@ -305,10 +220,6 @@ class BST{
 			return showNodeHeight(root);
 		}
 		
-		void showBalanceFactors(){
-			return showBalanceFactors(root);
-		}
-		
 		void createPerfectTree(){
 			return createPerfectTree(root);
 		}
@@ -317,13 +228,9 @@ class BST{
 			return treeLength(root);
 		}
 		
-		void DWS(){
+		void DSW(){
 			createBackbone();
 			createPerfectTree();
-		}
-		
-		BSTNode<T> * searchParentNode(const T &el){
-			return searchParentNode(root, el);
 		}
 		
 		
@@ -344,26 +251,6 @@ class BST{
 					p = p->left;
 				}
 				else{
-					p = p->right;
-				}
-			}
-
-			return 0;
-		}
-		
-		BSTNode<T>* searchParentNode(BSTNode<T> *p, const T &el) {
-			BSTNode<T> *parent = p;
-			
-			while(p != 0){
-				if(el == p->el) {
-					return parent;
-				}
-				else if(el < p->el) {
-					parent = p;
-					p = p->left;
-				}
-				else{
-					parent = p;
 					p = p->right;
 				}
 			}
@@ -509,38 +396,8 @@ class BST{
 			
 		}
 		
-		void showBalanceFactors(BSTNode<T> *p){
-			Queue<BSTNode<T>*> queue;
-			Queue<BSTNode<T>*> aux;
-			
-			if(p != 0){
-				queue.enqueue(p);
-
-				while(!queue.empty()){
-					p = queue.dequeue();
-
-					aux.enqueue(p);
-
-					if(p->left != 0) {
-						queue.enqueue(p->left);
-					}
-
-					if(p->right != 0){
-						queue.enqueue(p->right);
-					}
-				}
-			}
-
-			while(!aux.empty()){
-				cout << "\nNo = "; visit(aux.front()); 
-				cout << "Fator = " << aux.front()->balanceFactor;
-				aux.dequeue();
-			}
-			
-		}
-		
 		int treeLength(BSTNode<T> *p){
-			static int counter = 1;
+			static int counter = 0;
 			
             if(p != 0){
                 treeLength(p->left);
@@ -583,17 +440,23 @@ class BST{
 int main() {
 
 	BST<int> arvore1;
-
+	
 	arvore1.insert(10);
+	arvore1.insert(20);
+	arvore1.insert(30);
 	arvore1.insert(9);
 	arvore1.insert(8);
-	arvore1.insert(190);
+	arvore1.insert(12);
+	arvore1.insert(19);
+	arvore1.insert(13);
 	
+	cout << "Antes do balanciamento: " << endl;
 	arvore1.showNodeHeight();
+
+	arvore1.DSW();
 	
-	cout << endl << endl;
-	arvore1.showBalanceFactors();
+	cout << "\n\nDepois do balanciamento: " << endl;
+	arvore1.showNodeHeight();
 	
 	return 0;
 }
-
